@@ -41,8 +41,6 @@ def test(model, device, test_loader, criterion, epoch, iter_meter):
             for j in range(len(decoded_preds)):
                     test_cer.append(cer(decoded_targets[j], decoded_preds[j]))
                     test_wer.append(wer(decoded_targets[j], decoded_preds[j]))
-                    print(len(decoded_preds[j]))
-                    print( len(decoded_targets[j]))
 
     avg_cer = sum(test_cer) / len(test_cer)
     avg_wer = sum(test_wer) / len(test_wer)
