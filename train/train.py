@@ -8,6 +8,13 @@ from model.model import *
 from test.test import *
 from utils.processing import *
 
+NUM_EPOCHS = 10
+BATCH_SIZE = 10
+lr = 0.01
+
+train_set = "train-clean-100"
+test_set = "test-clean"
+
 class IterMeter(object):
     def __init__(self):
         self.val = 0
