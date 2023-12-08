@@ -8,6 +8,7 @@ from .utils.processing import *
 from .utils.itermeter import *
 from ..model.model import *
 
+
 def GreedyDecoder(output, blank_label=28, collapse_repeated=True):
     arg_maxes = torch.argmax(output, dim=2)
     decodes = []
@@ -21,23 +22,23 @@ def GreedyDecoder(output, blank_label=28, collapse_repeated=True):
         decodes.append(text_transform.int_to_text(decode))
     return decodes
 
-def transcribe(model, device, test_loader, criterion, iter_meter):
-    print('\nevaluating...')
+
+def transcribe(model, device, test_loader, iter_meter):
     model.eval()
-    test_loss = 0
-    test_cer = []
-    test_wer = []
 
     with torch.no_grad():
         for i, _data in enumerate(test_loader):
             spectrograms, labels, input_lengths, label_lengths = _data
-            spectrograms, labels = spectrograms.to(device), labels.to(device)
+            spectrograms = spectrograms.to(device)
 
             output = model(spectrograms)
             output = F.log_softmax(output, dim=2)
             output = output.transpose(0, 1)
 
-            decoded_preds, decoded_targets = GreedyDecoder(output.transpose(0, 1), labels, label_lengths)
+            decoded_preds = GreedyDecoder(output.transpose(0, 1))
+
+            for j in range(len(decoded_preds)):
+                print(decoded_pred[j])
 
 
 def main(batch_size=BATCH_SIZE, test_url="test-clean"):
@@ -48,7 +49,6 @@ def main(batch_size=BATCH_SIZE, test_url="test-clean"):
         "n_class": 29,
         "n_feats": 128,
         "dropout": 0.1,
-        "batch_size": batch_size,
     }
 
     use_cuda = torch.cuda.is_available()
@@ -81,6 +81,7 @@ def main(batch_size=BATCH_SIZE, test_url="test-clean"):
 
     iter_meter = IterMeter()
     transcribe(model, device, test_loader, iter_meter)
+    
 
 if __name__ == '__main__':
     main(BATCH_SIZE, test_set)
