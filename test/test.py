@@ -3,11 +3,11 @@ import torch.utils.data as data
 from torch.utils.data import Dataset, DataLoader
 import torchaudio
 
-from utils.processing import *
-from utils.greedy import *
-from utils.wer import *
-from utils.cer import *
-from model.model import *
+from ..utils.processing import *
+from ..utils.greedy import *
+from ..utils.wer import *
+from ..utils.cer import *
+from ..model.model import *
 
 NUM_EPOCHS = 10
 BATCH_SIZE = 10
