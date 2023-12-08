@@ -1,4 +1,4 @@
-from cer import *
+from .cer import *
 
 def word_errors(reference, hypothesis, ignore_case=False, delimiter=' '):
     if ignore_case == True:
