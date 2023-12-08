@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 import torchaudio
+from transform import *
 
 train_audio_transforms = nn.Sequential(
     torchaudio.transforms.MelSpectrogram(sample_rate=16000, n_mels=128),
