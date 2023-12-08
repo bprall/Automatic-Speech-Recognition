@@ -1,6 +1,6 @@
-from utils.greedy import GreedyDecoder
-from utils.wer import wer
-from utils.cer import cer
+from utils.greedy import *
+from utils.wer import *
+from utils.cer import *
 
 def test(model, device, test_loader, criterion, epoch, iter_meter):
     print('\nevaluating...')
