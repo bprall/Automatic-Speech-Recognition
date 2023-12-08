@@ -7,6 +7,7 @@ import torchaudio
 
 from ..model.model import *
 from ..test.test import test
+from ..utils.itermeter import *
 from ..utils.processing import *
 
 NUM_EPOCHS = 10
@@ -15,17 +16,6 @@ lr = 0.01
 
 train_set = "train-clean-100"
 test_set = "test-clean"
-
-class IterMeter(object):
-    def __init__(self):
-        self.val = 0
-
-    def step(self):
-        self.val += 1
-
-    def get(self):
-        return self.val
-
 
 def train(model, device, train_loader, criterion, optimizer, scheduler, epoch, iter_meter, experiment):
     model.train()
