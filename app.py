@@ -9,9 +9,8 @@ from .utils.itermeter import *
 from .utils.greedy import *
 from ..model.model import *
 
-NUM_EPOCHS = 10
 
-def test(model, device, test_loader, criterion, epoch, iter_meter):
+def test(model, device, test_loader, criterion, iter_meter):
     print('\nevaluating...')
     model.eval()
     test_loss = 0
@@ -30,7 +29,7 @@ def test(model, device, test_loader, criterion, epoch, iter_meter):
             decoded_preds, decoded_targets = GreedyDecoder(output.transpose(0, 1), labels, label_lengths)
 
 
-def main(batch_size=BATCH_SIZE, epochs=NUM_EPOCHS, test_url="test-clean"):
+def main(batch_size=BATCH_SIZE, test_url="test-clean"):
     hparams = {
         "n_cnn_layers": 3,
         "n_lstm_layers": 5,
@@ -39,7 +38,6 @@ def main(batch_size=BATCH_SIZE, epochs=NUM_EPOCHS, test_url="test-clean"):
         "n_feats": 128,
         "dropout": 0.1,
         "batch_size": batch_size,
-        "epochs": epochs
     }
 
     use_cuda = torch.cuda.is_available()
@@ -71,7 +69,7 @@ def main(batch_size=BATCH_SIZE, epochs=NUM_EPOCHS, test_url="test-clean"):
     criterion = nn.CTCLoss(blank=28).to(device)
 
     iter_meter = IterMeter()
-    test(model, device, test_loader, criterion, epoch, iter_meter)
+    test(model, device, test_loader, iter_meter)
 
 if __name__ == '__main__':
-    main(BATCH_SIZE, NUM_EPOCHS, test_set)
+    main(BATCH_SIZE, test_set)
