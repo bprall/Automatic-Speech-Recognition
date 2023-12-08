@@ -1,4 +1,4 @@
-from transform import *
+from .transform import *
 
 text_transform = TextTransform()
 
