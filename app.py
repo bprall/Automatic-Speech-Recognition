@@ -6,11 +6,22 @@ import torchaudio
 
 from .utils.processing import *
 from .utils.itermeter import *
-from .utils.greedy import *
 from ..model.model import *
 
+def GreedyDecoder(output, blank_label=28, collapse_repeated=True):
+    arg_maxes = torch.argmax(output, dim=2)
+    decodes = []
+    for i, args in enumerate(arg_maxes):
+        decode = []
+        for j, index in enumerate(args):
+            if index != blank_label:
+                if collapse_repeated and j != 0 and index == args[j - 1]:
+                    continue
+                decode.append(index.item())
+        decodes.append(text_transform.int_to_text(decode))
+    return decodes
 
-def test(model, device, test_loader, criterion, iter_meter):
+def transcribe(model, device, test_loader, criterion, iter_meter):
     print('\nevaluating...')
     model.eval()
     test_loss = 0
@@ -69,7 +80,7 @@ def main(batch_size=BATCH_SIZE, test_url="test-clean"):
     criterion = nn.CTCLoss(blank=28).to(device)
 
     iter_meter = IterMeter()
-    test(model, device, test_loader, iter_meter)
+    transcribe(model, device, test_loader, iter_meter)
 
 if __name__ == '__main__':
     main(BATCH_SIZE, test_set)
