@@ -5,7 +5,7 @@ from torch.utils.data import Dataset, DataLoader
 import torchaudio
 
 from model.model import *
-from test.test import *
+from test.test import test
 from utils.processing import *
 
 NUM_EPOCHS = 10
