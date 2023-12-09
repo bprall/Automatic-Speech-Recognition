@@ -106,5 +106,7 @@ def main(learning_rate=5e-4, batch_size=20, epochs=10,
         train(model, device, train_loader, criterion, optimizer, scheduler, epoch, iter_meter, experiment)
         test(model, device, test_loader, criterion, epoch, iter_meter, experiment)
 
+        torch.save(model.state_dict(), 'final_speech_to_text_model.pth')
+
 if __name__ == '__main__':
     main(lr, BATCH_SIZE, NUM_EPOCHS, train_set, test_set)
