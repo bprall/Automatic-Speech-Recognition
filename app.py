@@ -68,9 +68,6 @@ def main(waveform_path, model_dict_path):
     model.load_state_dict(state_dict)
     model = model.to(device)
 
-    print(model)
-    print('Num Model Parameters', sum([param.nelement() for param in model.parameters()]))
-
     transcribe(model, device, spectrogram)
 
 if __name__ == '__main__':
