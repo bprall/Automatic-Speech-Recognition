@@ -1,14 +1,13 @@
 import os
+import sys
 import torch
-import torch.utils.data as data
-from torch.utils.data import Dataset, DataLoader
+import torch.nn.functional as F
 import torchaudio
 
 from .utils.processing import *
 from .utils.itermeter import *
 from .model.model import *
 from .transform import *
-
 
 def GreedyDecoder(output, blank_label=28, collapse_repeated=True):
     arg_maxes = torch.argmax(output, dim=2)
@@ -23,31 +22,20 @@ def GreedyDecoder(output, blank_label=28, collapse_repeated=True):
         decodes.append(text_transform.int_to_text(decode))
     return decodes
 
-
-def transcribe(model, device, test_loader, iter_meter):
-    decodes = []
-    
+def transcribe(model, device, spectrogram):    
     model.eval()
-    
-    for i, _data in enumerate(test_loader):
-        spectrograms, labels, input_lengths, label_lengths = _data
-        spectrograms = spectrograms.to(device)
+    spectrogram = spectrogram.to(device)
 
-        with torch.no_grad():
-            output = model(spectrograms)
-        output = F.log_softmax(output, dim=2)
-        output = output.transpose(0, 1)
+    with torch.no_grad():
+        output = model(spectrogram)
+    output = F.log_softmax(output, dim=2)
+    output = output.transpose(0, 1)
 
-        decoded_preds = GreedyDecoder(output.transpose(0, 1))
+    decoded_pred = GreedyDecoder(output.transpose(0, 1))
 
-        for j in range(len(decoded_preds)):
-            decodes.append(decoded_pred[j])
-            
-    for i in range(len(decodes)):
-        print(decodes[j])
+    print(decoded_pred)
 
-
-def main(batch_size=BATCH_SIZE, dataset):
+def main(waveform_path):
     hparams = {
         "n_cnn_layers": 3,
         "n_lstm_layers": 5,
@@ -66,28 +54,29 @@ def main(batch_size=BATCH_SIZE, dataset):
 
     kwargs = {'num_workers': 1, 'pin_memory': True} if use_cuda else {}
     
-    test_loader = data.DataLoader(dataset=dataset, batch_size=hparams['batch_size'],
-                                  shuffle=False, collate_fn=lambda x: data_processing(x, 'valid'), **kwargs)
+    waveform, _ = torchaudio.load(waveform_path)
 
-    trained_model = SpeechRecognitionModel(
+    spectrogram = valid_audio_transforms(waveform).squeeze(0).transpose(0, 1)
+    spectrogram = spectrogram.unsqueeze(0).unsqueeze(1).transpose(2, 3)
+
+    model = SpeechRecognitionModel(
         hparams['n_cnn_layers'], hparams['n_lstm_layers'], hparams['lstm_dim'],
         hparams['n_class'], hparams['n_feats'], hparams['dropout']
-        ).to(device)
+    ).to(device)
 
     state_dict = torch.load("final_speech_to_text_model.pth")
-
-    trained_model.load_state_dict(state_dict)
-
-    trained_model = trained_model.to(device)
+    model.load_state_dict(state_dict)
+    model = model.to(device)
 
     print(model)
     print('Num Model Parameters', sum([param.nelement() for param in model.parameters()]))
 
-    criterion = nn.CTCLoss(blank=28).to(device)
-
-    iter_meter = IterMeter()
-    transcribe(model, device, test_loader, iter_meter)
-    
+    transcribe(model, device, spectrogram)
 
 if __name__ == '__main__':
-    main(BATCH_SIZE, test_set)
+    if len(sys.argv) != 2:
+        print("Usage: python app.py <path_to_waveform>")
+        sys.exit(1)
+
+    waveform_path = sys.argv[1]
+    main(waveform_path)
