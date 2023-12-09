@@ -1,5 +1,5 @@
 # Automatic Speech Recognition Software based on CNN-LSTM-CTC
-Automatic Speech Recognition Program based 
+Automatic Speech Recognition Program based on a CNN-LSTM-CTC model.
 
 # Packagee Dependencies
 ```
@@ -13,7 +13,7 @@ Torchaudio
 The training data was obtained from subset "test-clean-100" of the LibriSpeech dataset obtained through torchaudio. The file app.py will take any waveform file as a data input.
 
 # Commands
-To run the interface
+To run the application
 ```
 python app.py <path_to_waveform> <path_to_model_dict>
 ```
