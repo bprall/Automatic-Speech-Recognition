@@ -1,0 +1,5 @@
+OS
+Numpy 
+Python 3.6
+PyTorch
+Torchaudio
