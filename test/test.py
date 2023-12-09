@@ -11,7 +11,6 @@ from ..utils.wer import *
 from ..utils.cer import *
 from ..model.model import *
 
-NUM_EPOCHS = 10
 BATCH_SIZE = 10
 
 test_set = "test-clean"
@@ -50,7 +49,7 @@ def test(model, device, test_loader, criterion, epoch, iter_meter):
     print('Test set: Average loss: {:.4f}, Average CER: {:4f} Average WER: {:.4f}\n'.format(test_loss, avg_cer, avg_wer))
 
 
-def main(batch_size=BATCH_SIZE, epochs=NUM_EPOCHS, test_url="test-clean"):
+def main(batch_size=BATCH_SIZE, test_url="test-clean",  model_dict_path):
     hparams = {
         "n_cnn_layers": 3,
         "n_lstm_layers": 5,
@@ -59,7 +58,6 @@ def main(batch_size=BATCH_SIZE, epochs=NUM_EPOCHS, test_url="test-clean"):
         "n_feats": 128,
         "dropout": 0.1,
         "batch_size": batch_size,
-        "epochs": epochs
     }
 
     use_cuda = torch.cuda.is_available()
@@ -79,7 +77,11 @@ def main(batch_size=BATCH_SIZE, epochs=NUM_EPOCHS, test_url="test-clean"):
     model = SpeechRecognitionModel(
         hparams['n_cnn_layers'], hparams['n_lstm_layers'], hparams['lstm_dim'],
         hparams['n_class'], hparams['n_feats'], hparams['dropout']
-        ).to(device)
+        )
+
+    state_dict = torch.load(model_dict_path)
+    model.load_state_dict(state_dict)
+    model = model.to(device)
 
     print(model)
     print('Num Model Parameters', sum([param.nelement() for param in model.parameters()]))
@@ -90,4 +92,10 @@ def main(batch_size=BATCH_SIZE, epochs=NUM_EPOCHS, test_url="test-clean"):
     test(model, device, test_loader, criterion, epoch, iter_meter)
 
 if __name__ == '__main__':
-    main(BATCH_SIZE, NUM_EPOCHS, test_set)
+    if len(sys.argv) != 2:
+        print("Usage: python test.py <path_to_model_dict>")
+        sys.exit(1)
+
+    model_dict_path = sys.argv[1]
+    
+    main(BATCH_SIZE, test_set,  model_dict_path)
