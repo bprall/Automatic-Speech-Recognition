@@ -6,7 +6,8 @@ import torchaudio
 
 from .utils.processing import *
 from .utils.itermeter import *
-from ..model.model import *
+from .model.model import *
+from .transform import *
 
 
 def GreedyDecoder(output, blank_label=28, collapse_repeated=True):
@@ -24,24 +25,29 @@ def GreedyDecoder(output, blank_label=28, collapse_repeated=True):
 
 
 def transcribe(model, device, test_loader, iter_meter):
+    decodes = []
+    
     model.eval()
+    
+    for i, _data in enumerate(test_loader):
+        spectrograms, labels, input_lengths, label_lengths = _data
+        spectrograms = spectrograms.to(device)
 
-    with torch.no_grad():
-        for i, _data in enumerate(test_loader):
-            spectrograms, labels, input_lengths, label_lengths = _data
-            spectrograms = spectrograms.to(device)
-
+        with torch.no_grad():
             output = model(spectrograms)
-            output = F.log_softmax(output, dim=2)
-            output = output.transpose(0, 1)
+        output = F.log_softmax(output, dim=2)
+        output = output.transpose(0, 1)
 
-            decoded_preds = GreedyDecoder(output.transpose(0, 1))
+        decoded_preds = GreedyDecoder(output.transpose(0, 1))
 
-            for j in range(len(decoded_preds)):
-                print(decoded_pred[j])
+        for j in range(len(decoded_preds)):
+            decodes.append(decoded_pred[j])
+            
+    for i in range(len(decodes)):
+        print(decodes[j])
 
 
-def main(batch_size=BATCH_SIZE, test_url="test-clean"):
+def main(batch_size=BATCH_SIZE, dataset):
     hparams = {
         "n_cnn_layers": 3,
         "n_lstm_layers": 5,
@@ -60,7 +66,7 @@ def main(batch_size=BATCH_SIZE, test_url="test-clean"):
 
     kwargs = {'num_workers': 1, 'pin_memory': True} if use_cuda else {}
     
-    test_loader = data.DataLoader(dataset=test_dataset, batch_size=hparams['batch_size'],
+    test_loader = data.DataLoader(dataset=dataset, batch_size=hparams['batch_size'],
                                   shuffle=False, collate_fn=lambda x: data_processing(x, 'valid'), **kwargs)
 
     trained_model = SpeechRecognitionModel(
