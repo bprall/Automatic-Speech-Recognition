@@ -35,7 +35,7 @@ def transcribe(model, device, spectrogram):
 
     print(decoded_pred)
 
-def main(waveform_path):
+def main(waveform_path, model_dict_path):
     hparams = {
         "n_cnn_layers": 3,
         "n_lstm_layers": 5,
@@ -64,7 +64,7 @@ def main(waveform_path):
         hparams['n_class'], hparams['n_feats'], hparams['dropout']
     ).to(device)
 
-    state_dict = torch.load("final_speech_to_text_model.pth")
+    state_dict = torch.load(model_dict_path)
     model.load_state_dict(state_dict)
     model = model.to(device)
 
@@ -74,9 +74,10 @@ def main(waveform_path):
     transcribe(model, device, spectrogram)
 
 if __name__ == '__main__':
-    if len(sys.argv) != 2:
-        print("Usage: python app.py <path_to_waveform>")
+    if len(sys.argv) != 3:
+        print("Usage: python app.py <path_to_waveform> <path_to_model_dict>")
         sys.exit(1)
 
     waveform_path = sys.argv[1]
-    main(waveform_path)
+    model_dict_path = sys.argv[2]
+    main(waveform_path, model_dict_path)
