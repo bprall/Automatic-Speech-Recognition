@@ -13,14 +13,24 @@ Torchaudio
 The training data was obtained from subset "test-clean-100" of the LibriSpeech dataset obtained through torchaudio. The file app.py will take any waveform file as a data input.
 
 # Commands
+To install dependencies
+```
+pip3 install -r requirements.txt
+```
+
 To run the application
 ```
 python app.py <path_to_waveform> <path_to_model_dict>
 ```
 
-To install dependencies
+To train the model
 ```
-pip3 install -r requirements.txt
+python train.py
+```
+
+To test the model
+```
+python test.py <path_to_model_dict>
 ```
 
 # Contributions
