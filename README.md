@@ -23,14 +23,14 @@ To run the application
 python app.py <path_to_waveform> <path_to_model_dict>
 ```
 
-To train the model
-```
-python train.py
-```
-
 To test the model
 ```
 python test.py <path_to_model_dict>
+```
+
+To train the model
+```
+python train.py
 ```
 
 # Contributions
