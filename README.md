@@ -1,7 +1,7 @@
 # Automatic Speech Recognition Software based on CNN-LSTM-CTC
 Automatic Speech Recognition Program based on a CNN-LSTM-CTC model.
 
-# Packagee Dependencies
+# Package Dependencies
 ```
 OS
 Numpy 
