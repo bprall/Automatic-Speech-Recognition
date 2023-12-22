@@ -94,4 +94,4 @@ if __name__ == '__main__':
 
     model_dict_path = sys.argv[1]
     
-    main(BATCH_SIZE, test_set,  model_dict_path)
+    main(model_dict_path, BATCH_SIZE, test_set)
