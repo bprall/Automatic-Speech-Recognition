@@ -5,9 +5,9 @@ import torch.utils.data as data
 from torch.utils.data import Dataset, DataLoader
 import torchaudio
 
-from .model import *
-from .test import test
-from .utility import *
+from model import *
+from test import test
+from utility import *
 
 NUM_EPOCHS = 10
 BATCH_SIZE = 10
