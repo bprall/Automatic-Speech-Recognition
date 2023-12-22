@@ -4,8 +4,8 @@ import torch.utils.data as data
 from torch.utils.data import Dataset, DataLoader
 import torchaudio
 
-from .utility import *
-from .model import *
+from utility import *
+from model import *
 
 BATCH_SIZE = 10
 
