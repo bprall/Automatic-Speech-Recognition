@@ -5,10 +5,10 @@ import torch.utils.data as data
 from torch.utils.data import Dataset, DataLoader
 import torchaudio
 
-from model.model import *
-from test.test import test
-from utils.itermeter import *
-from utils.processing import *
+from CNN-LSTM-CTC-Automatic-Speech-Recognition.model.model import *
+from CNN-LSTM-CTC-Automatic-Speech-Recognition.test.test import test
+from CNN-LSTM-CTC-Automatic-Speech-Recognition.utils.itermeter import *
+from CNN-LSTM-CTC-Automatic-Speech-Recognition.utils.processing import *
 
 NUM_EPOCHS = 10
 BATCH_SIZE = 10
