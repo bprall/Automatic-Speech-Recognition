@@ -25,12 +25,12 @@ python app.py <path_to_waveform> <path_to_model_dict>
 
 To test the model
 ```
-python test/test.py <path_to_model_dict>
+python src/test.py <path_to_model_dict>
 ```
 
 To train the model
 ```
-python train/train.py
+python src/train.py
 ```
 
 # Contributions
