@@ -1,4 +1,3 @@
-os
-tumpy 
+numpy 
 torch
 torchaudio
