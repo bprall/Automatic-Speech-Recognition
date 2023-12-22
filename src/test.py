@@ -45,7 +45,7 @@ def test(model, device, test_loader, criterion, epoch, iter_meter):
     print('Test set: Average loss: {:.4f}, Average CER: {:4f} Average WER: {:.4f}\n'.format(test_loss, avg_cer, avg_wer))
 
 
-def main(batch_size=BATCH_SIZE, test_url="test-clean",  model_dict_path):
+def main(model_dict_path, batch_size=BATCH_SIZE, test_url="test-clean"):
     hparams = {
         "n_cnn_layers": 3,
         "n_lstm_layers": 5,
